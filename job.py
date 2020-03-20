@@ -13,6 +13,7 @@ Filename = Path(config['default']['SourceKey']).stem
 
 s3_client = boto3.client('s3')
 
+print ("Downloading File...")
 # Download file
 s3_client.download_file(
     S3Bucket,
@@ -20,12 +21,14 @@ s3_client.download_file(
     Filename
     )
 
+print ("Converting to parquet...")
 #Transform to parquet
 fn = Filename + ".parquet"
 df = pd.read_csv(Filename)
 df.to_parquet(fn)
 
 
+print ("Uploading to S3...")
 # Upload file
 object_name = TargetKey + fn
 response = s3_client.upload_file(
